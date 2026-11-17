@@ -1,0 +1,64 @@
+# Academic dates shown on the start page ("Up next", to-dos, suggestions).
+#
+# Only add a date after checking it on the linked page, and set verified-on to that day. Wrong
+# deadlines have real consequences (docs/decisions.md #5, #13). Dates are ISO (YYYY-MM-DD) and
+# quoted so YAML keeps them as text.
+#
+# Fields: id, title, start, end (optional, last day of a period), department (optional, e.g.
+# fb16; omit for everyone), action (optional, shown as a to-do), source-url, verified-on,
+# suggestions (questions the assistant offers while the date is coming up), de (German title,
+# action and suggestions; anything left out falls back to English).
+#
+# Still missing, add once published and checked:
+#   - Rückmeldung for the summer semester 2027 (rueckmeldung.html currently lists WS 2026/27 only)
+#   - exam registration periods per department (not on the crawled pages)
+
+assistant:
+  calendar:
+    entries:
+      - id: lectures-ws-2026
+        title: "Lecture period, winter semester 2026/27"
+        start: "2026-10-12"
+        end: "2027-02-12"
+        action: "Check your timetable and sign up for your courses"
+        source-url: https://www.uni-kassel.de/uni/studium/im-studium/semester-und-lehrveranstaltungszeiten.html
+        verified-on: "2026-10-11"
+        suggestions:
+          - "How do I sign up for courses at the start of the semester?"
+          - "Where do I find the timetable for my programme?"
+        de:
+          title: "Vorlesungszeit Wintersemester 2026/27"
+          action: "Stundenplan prüfen und für Lehrveranstaltungen anmelden"
+          suggestions:
+            - "Wie melde ich mich zu Semesterbeginn für Lehrveranstaltungen an?"
+            - "Wo finde ich den Stundenplan für meinen Studiengang?"
+
+      - id: christmas-break-2026
+        title: "No lectures over Christmas"
+        start: "2026-12-19"
+        end: "2027-01-10"
+        source-url: https://www.uni-kassel.de/uni/studium/im-studium/semester-und-lehrveranstaltungszeiten.html
+        verified-on: "2026-10-11"
+        de:
+          title: "Vorlesungsfreie Zeit über Weihnachten"
+
+      - id: ws-2026-end
+        title: "Winter semester 2026/27 ends"
+        start: "2027-03-31"
+        source-url: https://www.uni-kassel.de/uni/studium/im-studium/semester-und-lehrveranstaltungszeiten.html
+        verified-on: "2026-10-11"
+        suggestions:
+          - "When do I have to re-register (Rückmeldung) for the summer semester?"
+        de:
+          title: "Ende des Wintersemesters 2026/27"
+          suggestions:
+            - "Wann muss ich mich für das Sommersemester zurückmelden?"
+
+      - id: lectures-ss-2027
+        title: "Lecture period, summer semester 2027"
+        start: "2027-04-12"
+        end: "2027-07-16"
+        source-url: https://www.uni-kassel.de/uni/studium/im-studium/semester-und-lehrveranstaltungszeiten.html
+        verified-on: "2026-10-11"
+        de:
+          title: "Vorlesungszeit Sommersemester 2027"

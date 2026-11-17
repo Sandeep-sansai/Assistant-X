@@ -1,0 +1,10 @@
+# Local model for development, until the project moves to Claude (docs/decisions.md #11).
+# Build it once with:  ollama create qwen2.5-7b-16k -f ollama/Modelfile
+FROM qwen2.5:7b
+
+# The prompt holds up to 8 source excerpts (~4k tokens). Ollama's default context window can be
+# smaller, and it silently cuts off the start of the prompt when it overflows, so set it explicitly.
+PARAMETER num_ctx 16384
+
+# Answers should stick to the sources, not be creative.
+PARAMETER temperature 0.2

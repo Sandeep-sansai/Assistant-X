@@ -1,0 +1,142 @@
+# Guided journeys the assistant offers ("Shall we go through this together?").
+#
+# Every step must come from the linked page; set verified-on to the day it was checked. Steps with
+# a department are shown only to that department's students; "replaces" names a general step that a
+# department-specific one stands in for. Anything missing under de: falls back to English.
+#
+# The steps below were checked on 2026-10-14 against the crawled copies of the linked pages
+# (fetched 2026-10-10). "link" is the official page that explains a step; "action-link" is where the
+# step is actually done, when that is a different official page (e.g. the IT service's account
+# activation). Never link to a non-university site here.
+
+assistant:
+  journeys:
+    items:
+      - id: first-weeks
+        min-semester: 1
+        max-semester: 1
+        days-before-start: 45
+        days-after-start: 42
+        title: "Your first weeks"
+        prompt: "Welcome to your first semester! Most new students sort out these {n} things in their first weeks. Shall we go through them together?"
+        de:
+          title: "Deine ersten Wochen"
+          prompt: "Willkommen im ersten Semester! Diese {n} Dinge erledigen die meisten in den ersten Wochen. Wollen wir sie gemeinsam durchgehen?"
+        steps:
+          - id: uniaccount
+            title: "Activate your UniAccount"
+            detail: "Your UniAccount is your user ID for all central IT services, such as eCampus, Moodle and WLAN, and comes with your uni email address. All mail from the university goes there, so forward it to your private address or check it regularly."
+            ask: "How do I activate my UniAccount?"
+            link: https://www.uni-kassel.de/its/infothek/welche-digitale-loesung-passt-zu-meiner-aufgabe/erstsemester.html
+            action-link: https://www.uni-kassel.de/go/activate
+            action-label: "Activate now"
+            verified-on: "2026-10-17"
+            de:
+              title: "UniAccount aktivieren"
+              detail: "Der UniAccount ist deine Benutzerkennung für alle zentralen IT-Dienste, etwa eCampus, Moodle und WLAN, und hat eine Uni-E-Mail-Adresse. Die gesamte Post der Uni geht dorthin: Leite sie an deine private Adresse weiter oder schau regelmäßig hinein."
+              ask: "Wie aktiviere ich meinen UniAccount?"
+              action-label: "Jetzt aktivieren"
+
+          - id: wlan
+            title: "Connect to eduroam WLAN"
+            detail: "With your UniAccount you can use the eduroam WLAN across the campus. Once it's set up, your device connects automatically at every Uni Kassel site, and at many other universities worldwide."
+            ask: "How do I connect to the university WLAN?"
+            link: https://www.uni-kassel.de/its/it-dienste-software/wlan-eduroam-zugang-hochschulnetz.html
+            verified-on: "2026-10-17"
+            de:
+              title: "Mit dem WLAN eduroam verbinden"
+              detail: "Mit deinem UniAccount nutzt du das WLAN eduroam auf dem ganzen Campus. Einmal eingerichtet, verbindet sich dein Gerät an allen Standorten der Uni Kassel automatisch, auch an vielen anderen Hochschulen weltweit."
+              ask: "Wie verbinde ich mich mit dem WLAN der Uni?"
+
+          - id: semester-fee
+            title: "Pay the semester contribution"
+            detail: "Once it's paid, your CampusCard comes by post: student ID, library card, Mensa payment card and copy card in one."
+            ask: "How much is the semester contribution and how do I pay it?"
+            link: https://www.uni-kassel.de/uni/studium/im-studium/semesterbeitrag.html
+            verified-on: "2026-10-14"
+            de:
+              title: "Semesterbeitrag überweisen"
+              detail: "Danach kommt deine CampusCard per Post: Studienausweis, Bibliotheksausweis, Mensa-Bezahlkarte und Kopierkarte in einem."
+              ask: "Wie hoch ist der Semesterbeitrag und wie überweise ich ihn?"
+
+          - id: semester-ticket
+            title: "Set up your semester ticket"
+            detail: "The Deutschlandticket is included in the semester contribution. It runs as a web app and is valid on local transport across Germany, 2nd class."
+            ask: "How do I set up the digital semester ticket?"
+            link: https://www.uni-kassel.de/uni/studium/im-studium/studentisches-leben/studentische-selbstverwaltung/service-und-beratung/semesterticket/anleitung-zur-benutzung-des-digitaltickets.html
+            verified-on: "2026-10-14"
+            de:
+              title: "Semesterticket einrichten"
+              detail: "Das Deutschlandticket ist im Semesterbeitrag enthalten. Es läuft als Web-App und gilt deutschlandweit im Nahverkehr in der 2. Klasse."
+              ask: "Wie richte ich das digitale Semesterticket ein?"
+
+          - id: intro-events
+            title: "Go to your programme's introductory events"
+            detail: "There are introductory events at the start of studies; your programme's page lists them. They're the best place to meet others and get help with your timetable."
+            ask: "When are the introductory events for my programme?"
+            link: https://www.uni-kassel.de/uni/studium/nach-der-bewerbung.html
+            verified-on: "2026-10-14"
+            de:
+              title: "Zu den Einführungsveranstaltungen gehen"
+              detail: "Zu Studienbeginn gibt es Einführungsveranstaltungen; die Seite deines Studiengangs nennt die Termine. Dort lernst du andere kennen und bekommst Hilfe beim Stundenplan."
+              ask: "Wann sind die Einführungsveranstaltungen für meinen Studiengang?"
+
+          - id: intro-events-fb16
+            department: fb16
+            replaces: intro-events
+            title: "Orientation week, 12–14 October"
+            detail: "Welcome and introduction in the department on Monday 12 October at 9:15, Wilhelmshöher Allee 71–73, lecture hall 1603. Taking part is highly recommended; regular courses start on Thursday 15 October."
+            ask: "What happens in the orientation week for my programme?"
+            link: https://www.uni-kassel.de/uni/studium/computer-science-master/einfuehrung-und-studienstart.html
+            verified-on: "2026-10-14"
+            de:
+              title: "Orientierungswoche, 12.–14. Oktober"
+              detail: "Begrüßung und Einführung im Fachbereich am Montag, 12. Oktober, um 9:15 Uhr, Wilhelmshöher Allee 71–73, Hörsaal 1603. Die Teilnahme wird dringend empfohlen; die regulären Lehrveranstaltungen beginnen am Donnerstag, 15. Oktober."
+              ask: "Was passiert in der Orientierungswoche für meinen Studiengang?"
+
+          - id: timetable
+            title: "Build your timetable"
+            detail: "You put it together yourself from your module exam regulations; the module handbook has sample timetables. Do it after your introductory event, where you'll get help."
+            ask: "How do I put together my timetable?"
+            link: https://www.uni-kassel.de/uni/studium/informatik-master/einfuehrung-und-studienstart/die-ersten-wochen.html
+            verified-on: "2026-10-14"
+            de:
+              title: "Stundenplan zusammenstellen"
+              detail: "Du stellst ihn anhand deiner Modulprüfungsordnung selbst zusammen; im Modulhandbuch gibt es Beispielstundenpläne. Am besten nach der Einführungsveranstaltung, dort bekommst du Hilfe."
+              ask: "Wie stelle ich meinen Stundenplan zusammen?"
+
+          - id: moodle
+            title: "Log in to Moodle"
+            detail: "Moodle is the learning platform where students and lecturers share course materials, comments and discussions."
+            ask: "What do I use Moodle for?"
+            link: https://www.uni-kassel.de/uni/studium/informatik-master/einfuehrung-und-studienstart/die-ersten-wochen.html
+            action-link: https://moodle.uni-kassel.de/moodle/
+            action-label: "Open Moodle"
+            verified-on: "2026-10-17"
+            de:
+              title: "Bei Moodle anmelden"
+              detail: "Moodle ist die Lernplattform, auf der Studierende und Lehrende Materialien teilen, kommentieren und diskutieren."
+              ask: "Wofür nutze ich Moodle?"
+              action-label: "Moodle öffnen"
+
+          - id: help
+            title: "Know where to get help"
+            detail: "Infotheke \"Information Studium\": Moritzstr. 18 (Campus Center), 3rd floor. IT help desk for UniAccount, WLAN and more: Mönchebergstr. 11, room 1740A, phone 0561 804-3838."
+            ask: "Where can I get help as a new student?"
+            link: https://www.uni-kassel.de/uni/studium/informatik-master/einfuehrung-und-studienstart/die-ersten-wochen.html
+            verified-on: "2026-10-14"
+            de:
+              title: "Wissen, wo es Hilfe gibt"
+              detail: "Infotheke „Information Studium“: Moritzstr. 18 (Campus Center), 3. Stock. IT-Helpdesk für UniAccount, WLAN usw.: Mönchebergstr. 11, Raum 1740A, Telefon 0561 804-3838."
+              ask: "Wo bekomme ich als Erstsemester Hilfe?"
+
+          - id: library
+            title: "Join a library course"
+            detail: "The library offers courses on research, databases and reference management, plus self-study videos."
+            ask: "What courses does the library offer for new students?"
+            link: https://www.uni-kassel.de/ub/lernen/kurse-schulungen
+            verified-on: "2026-10-14"
+            de:
+              title: "Einen Bibliothekskurs besuchen"
+              detail: "Die Bibliothek bietet Kurse zu Recherche, Datenbanken und Literaturverwaltung sowie Selbstlernvideos."
+              ask: "Welche Kurse bietet die Bibliothek für Erstsemester?"

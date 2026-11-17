@@ -1,0 +1,183 @@
+spring:
+  application:
+    name: assistant
+  config:
+    # Hand-checked academic dates and guided journeys shown on the start page.
+    import:
+      - classpath:academic-calendar.yml
+      - classpath:journeys.yml
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/assistant}
+    username: ${DB_USER:${USER:postgres}}
+    password: ${DB_PASSWORD:}
+  threads:
+    virtual:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+
+assistant:
+  # Protects POST /api/admin/*. Leave empty to disable the admin endpoints.
+  admin-token: ${ADMIN_TOKEN:}
+
+  llm:
+    # "openai-compatible" (default: a free local model through Ollama) or "anthropic" (Claude).
+    provider: ${LLM_PROVIDER:openai-compatible}
+
+  # Used when provider = anthropic.
+  claude:
+    # The API key is read from ANTHROPIC_API_KEY.
+    model: ${CLAUDE_MODEL:claude-opus-5-5}
+    effort: ${CLAUDE_EFFORT:medium}
+    max-tokens: 16000
+    # Retry refused requests on a fallback model (server-side, Claude API only).
+    fallbacks: true
+
+  # Used when provider = openai-compatible. Defaults to the local Ollama model built from
+  # ollama/Modelfile; any other server with an OpenAI-style /chat/completions endpoint works too.
+  openai-compatible:
+    base-url: ${OPENAI_BASE_URL:http://localhost:11434/v1}
+    api-key: ${OPENAI_API_KEY:}
+    model: ${OPENAI_MODEL:qwen2.5-7b-16k}
+    max-tokens: 2000
+    # Local models on a laptop can take a while for long answers.
+    timeout: 180s
+
+  retrieval:
+    top-k: 8
+
+  crawler:
+    # Identify the bot and give the university a way to reach you.
+    user-agent: "UniKasselStudyAssistant/0.1 (student project; contact: ${CRAWLER_CONTACT:unset})"
+    delay: 1500ms
+    max-pages: ${CRAWLER_MAX_PAGES:1500}
+    # How many link hops to follow from a sitemap URL or seed.
+    max-depth: 2
+    # Weekly, Sunday 03:00. Use "-" to disable.
+    cron: ${CRAWLER_CRON:0 0 3 * * SUN}
+    sitemaps:
+      - https://www.uni-kassel.de/uni/sitemap.xml
+      - https://www.uni-kassel.de/eecs/sitemap.xml
+    # Only sitemap URLs starting with one of these are crawled.
+    include-prefixes:
+      - https://www.uni-kassel.de/uni/studium/computer-science-master
+      - https://www.uni-kassel.de/uni/studium/informatik-master
+      - https://www.uni-kassel.de/uni/studium/im-studium
+      - https://www.uni-kassel.de/uni/studium/vor-der-bewerbung
+      - https://www.uni-kassel.de/uni/studium/nach-der-bewerbung
+      - https://www.uni-kassel.de/uni/studium/kontakt-und-beratung
+      - https://www.uni-kassel.de/eecs/studium/master/informatik
+    # Crawled in addition to the sitemap URLs.
+    seeds:
+      # Computer Science M.Sc. 2026: regulations incl. the 1st amendment of 17.06.2026, with links
+      # to every module description.
+      - https://moduldatenbank.uni-kassel.de/showFPO.php?id=120
+    # Links in a page's main content are followed only when they match one of these regexes.
+    # Iframes embedded in a page's main content (e.g. the module database) are always followed.
+    follow-patterns:
+      - https://moduldatenbank\.uni-kassel\.de/show\w+\.php\?id=\d+
+      - https://www\.uni-kassel\.de/.+\.pdf
+
+  university:
+    time-zone: Europe/Berlin
+    # Offered in the profile picker. "programmes" are suggestions; students can type their own.
+    departments:
+      - id: fb01
+        name: "FB 01 Humanwissenschaften"
+      - id: fb02
+        name: "FB 02 Geistes- und Kulturwissenschaften"
+      - id: fb05
+        name: "FB 05 Gesellschaftswissenschaften"
+      - id: fb06
+        name: "FB 06 Architektur – Stadtplanung – Landschaftsplanung"
+      - id: fb07
+        name: "FB 07 Wirtschaftswissenschaften"
+      - id: fb10
+        name: "FB 10 Mathematik und Naturwissenschaften"
+      - id: fb11
+        name: "FB 11 Ökologische Agrarwissenschaften"
+      - id: fb14
+        name: "FB 14 Bauingenieur- und Umweltingenieurwesen"
+      - id: fb15
+        name: "FB 15 Maschinenbau"
+      - id: fb16
+        name: "FB 16 Elektrotechnik/Informatik"
+        programmes:
+          - "Computer Science (M.Sc.)"
+          - "Informatik (M.Sc.)"
+
+  feed:
+    # Every 6 hours. Use "-" to disable.
+    cron: ${FEED_CRON:0 0 */6 * * *}
+    # News and event listing pages. Departments without an entry here see university-wide items
+    # only. Each URL was checked by hand; FB 05, 06, 10, 14 and 15 use different page layouts and
+    # still need their listing pages found.
+    sources:
+      - id: uni-events
+        label: "Uni Kassel"
+        kind: EVENT
+        url: https://www.uni-kassel.de/uni/studium/im-studium/veranstaltungskalender/alle-veranstaltungen.html
+      - id: fb01-news
+        label: "FB 01"
+        department: fb01
+        kind: NEWS
+        url: https://www.uni-kassel.de/fb01/infothek/aktuelles.html
+      - id: fb01-events
+        label: "FB 01"
+        department: fb01
+        kind: EVENT
+        url: https://www.uni-kassel.de/fb01/infothek/termine.html
+      - id: fb02-events
+        label: "FB 02"
+        department: fb02
+        kind: EVENT
+        url: https://www.uni-kassel.de/fb02/infothek/termine.html
+      - id: fb07-news
+        label: "FB 07"
+        department: fb07
+        kind: NEWS
+        url: https://www.uni-kassel.de/fb07/infothek/aktuelles.html
+      - id: fb07-events
+        label: "FB 07"
+        department: fb07
+        kind: EVENT
+        url: https://www.uni-kassel.de/fb07/infothek/termine.html
+      - id: fb11-news
+        label: "FB 11"
+        department: fb11
+        kind: NEWS
+        url: https://www.uni-kassel.de/fb11agrar/infothek/aktuelles.html
+      - id: fb11-events
+        label: "FB 11"
+        department: fb11
+        kind: EVENT
+        url: https://www.uni-kassel.de/fb11agrar/infothek/termine.html
+      - id: fb16-news
+        label: "FB 16"
+        department: fb16
+        kind: NEWS
+        url: https://www.uni-kassel.de/eecs/infothek/aktuelles.html
+      - id: fb16-events
+        label: "FB 16"
+        department: fb16
+        kind: EVENT
+        url: https://www.uni-kassel.de/eecs/infothek/termine.html
+
+  # Study planner: programmes read from the university's module database.
+  planner:
+    # Re-import weekly, Sunday 04:30 (after the crawl). Use "-" to disable.
+    cron: ${PLANNER_CRON:0 30 4 * * SUN}
+    # Optional CSV with the university's past module data (docs/past-data-request.md).
+    history-file: ${PLANNER_HISTORY_FILE:}
+    programmes:
+      - id: cs-msc-2026
+        title: "Computer Science (M.Sc.), PO 2026"
+        department: fb16
+        names:
+          - "Computer Science (M.Sc.)"
+          - "Computer Science"
+        url: https://moduldatenbank.uni-kassel.de/showFPO.php?id=120
